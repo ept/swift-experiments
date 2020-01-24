@@ -6,8 +6,30 @@ class ToDoItem: NSObject {
     @objc dynamic var isDone: Bool = false
     var timestamp: Date = Date()
 
+    deinit {
+        print("freeing ToDoItem")
+    }
+
     static func primaryKey() -> String? {
         return "itemId"
+    }
+}
+
+class MyObserver : NSObject {
+    let target: ToDoItem
+    var observation: NSKeyValueObservation?
+
+    init(observe target: ToDoItem) {
+        self.target = target
+        super.init()
+        observation = target.observe(\.isDone, options: [.old, .new]) {
+            _, change in
+            print("isDone changed from \(change.oldValue!) to \(change.newValue!)")
+        }
+    }
+
+    deinit {
+        print("freeing MyObserver")
     }
 }
 
@@ -61,5 +83,9 @@ struct Experiment {
 
     static func run() {
         model(ToDoItem.self)
+
+        let instance = ToDoItem()
+        let observer = MyObserver(observe: instance)
+        instance.isDone = true
     }
 }
