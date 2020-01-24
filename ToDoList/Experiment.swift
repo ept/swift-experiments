@@ -5,6 +5,8 @@ class ToDoItem: NSObject {
     @objc dynamic var body: String = ""
     @objc dynamic var isDone: Bool = false
     @objc dynamic var timestamp: Date = Date()
+    @objc dynamic var strarray: [String] = []
+    @objc dynamic var strdict: [String : String] = [:]
 
     deinit {
         print("freeing ToDoItem")
@@ -15,9 +17,18 @@ class ToDoItem: NSObject {
     }
 }
 
+enum PropertyType: String {
+    // https://nshipster.com/type-encodings/
+    case int8 = "c", uint8 = "C", int16 = "s", uint16 = "S"
+    case int32 = "i", uint32 = "I", int64 = "q", uint64 = "Q"
+    case float = "f", double = "d", bool = "B"
+    case string = "@\"NSString\"", date = "@\"NSDate\""
+    case array = "@\"NSArray\"", dict = "@\"NSDictionary\""
+}
+
 struct ClassInfo {
     let className: String
-    let properties: [String : [String : String]]
+    let properties: [String : PropertyType]
 }
 
 class MyObserver : NSObject {
@@ -68,21 +79,29 @@ struct Experiment {
         }
 
         var propCount: UInt32 = 0
-        var properties: [String : [String : String]] = [:]
+        var properties: [String : PropertyType] = [:]
         if let props = class_copyPropertyList(type, &propCount) {
             for i in 0..<Int(propCount) {
-                var attrCount: UInt32 = 0, attrDict: [String : String] = [:]
+                let propName = String(cString: property_getName(props[i]))
+                print("property \(propName):")
+
+                var attrCount: UInt32 = 0
                 if let attrs = property_copyAttributeList(props[i], &attrCount) {
                     for j in 0..<Int(attrCount) {
                         let attrName = String(cString: attrs[j].name)
                         let attrValue = String(cString: attrs[j].value)
-                        attrDict[attrName] = attrValue
+                        print("    \(attrName): \(attrValue)")
+
+                        if attrName == "T" {
+                            if let propType = PropertyType(rawValue: attrValue) {
+                                properties[propName] = propType
+                            } else {
+                                print("*** Unknown type: \(attrValue)")
+                            }
+                        }
                     }
                     free(attrs)
                 }
-
-                let propName = String(cString: property_getName(props[i]))
-                properties[propName] = attrDict
             }
             free(props)
         }
@@ -93,6 +112,7 @@ struct Experiment {
 
     static func run() {
         let info = model(ToDoItem.self)
+        print(info)
         let instance = ToDoItem()
         let observer = MyObserver(classInfo: info, observe: instance)
         instance.isDone = true
