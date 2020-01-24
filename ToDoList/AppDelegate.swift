@@ -12,6 +12,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.makeKeyAndVisible()
         window?.rootViewController = UINavigationController(rootViewController: WelcomeViewController())
 
+        Experiment.run()
         return true
     }
 

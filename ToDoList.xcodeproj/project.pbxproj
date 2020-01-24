@@ -18,6 +18,7 @@
 		5B9872C923D9C37700ABD32B /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B9872C823D9C37700ABD32B /* WelcomeViewController.swift */; };
 		5B9872CB23D9C5FD00ABD32B /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B9872CA23D9C5FD00ABD32B /* Item.swift */; };
 		5B9872CD23D9C6AC00ABD32B /* ItemsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B9872CC23D9C6AC00ABD32B /* ItemsViewController.swift */; };
+		5B9872D123DAEF0200ABD32B /* Experiment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B9872D023DAEF0200ABD32B /* Experiment.swift */; };
 		6D61BD75DFD88725C18E2CD4 /* Pods_ToDoList_ToDoListUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D97B7D1DE62AF69D588F994 /* Pods_ToDoList_ToDoListUITests.framework */; };
 		9FB6878FC78353CE87A9F721 /* Pods_ToDoListTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E61A67CDC2D5C837AB05F9B /* Pods_ToDoListTests.framework */; };
 /* End PBXBuildFile section */
@@ -60,6 +61,7 @@
 		5B9872C823D9C37700ABD32B /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		5B9872CA23D9C5FD00ABD32B /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		5B9872CC23D9C6AC00ABD32B /* ItemsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsViewController.swift; sourceTree = "<group>"; };
+		5B9872D023DAEF0200ABD32B /* Experiment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Experiment.swift; sourceTree = "<group>"; };
 		679AD287872893429AA30E29 /* Pods-ToDoList-ToDoListUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ToDoList-ToDoListUITests.release.xcconfig"; path = "Target Support Files/Pods-ToDoList-ToDoListUITests/Pods-ToDoList-ToDoListUITests.release.xcconfig"; sourceTree = "<group>"; };
 		9D97B7D1DE62AF69D588F994 /* Pods_ToDoList_ToDoListUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ToDoList_ToDoListUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F5768F2105B5DF6FF75B8A5 /* Pods-ToDoList.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ToDoList.debug.xcconfig"; path = "Target Support Files/Pods-ToDoList/Pods-ToDoList.debug.xcconfig"; sourceTree = "<group>"; };
@@ -135,9 +137,10 @@
 			children = (
 				5B98729323D8F6A800ABD32B /* AppDelegate.swift */,
 				5B9872C623D9C23300ABD32B /* Constants.swift */,
-				5B9872C823D9C37700ABD32B /* WelcomeViewController.swift */,
+				5B9872D023DAEF0200ABD32B /* Experiment.swift */,
 				5B9872CA23D9C5FD00ABD32B /* Item.swift */,
 				5B9872CC23D9C6AC00ABD32B /* ItemsViewController.swift */,
+				5B9872C823D9C37700ABD32B /* WelcomeViewController.swift */,
 				5B98729C23D8F6AB00ABD32B /* Assets.xcassets */,
 				5B9872A423D8F6AB00ABD32B /* Info.plist */,
 				5B98729723D8F6A800ABD32B /* ToDoList.xcdatamodeld */,
@@ -425,6 +428,7 @@
 				5B98729923D8F6A800ABD32B /* ToDoList.xcdatamodeld in Sources */,
 				5B9872C923D9C37700ABD32B /* WelcomeViewController.swift in Sources */,
 				5B9872CB23D9C5FD00ABD32B /* Item.swift in Sources */,
+				5B9872D123DAEF0200ABD32B /* Experiment.swift in Sources */,
 				5B9872CD23D9C6AC00ABD32B /* ItemsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
