@@ -31,6 +31,12 @@ struct ClassInfo {
     let properties: [String : PropertyType]
 }
 
+// Realm docs:
+// https://docs.realm.io/sync/using-synced-realms/designing-an-architecture-with-multiple-realms
+//
+//Stuff on key-value observing:
+//https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/KeyValueObserving/Articles/KVOBasics.html
+//https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/KeyValueCoding/Compliant.html#//apple_ref/doc/uid/20002172
 class MyObserver : NSObject {
     let classInfo: ClassInfo
     let target: ToDoItem
