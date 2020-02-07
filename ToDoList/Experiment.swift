@@ -7,6 +7,7 @@ class ToDoItem: NSObject {
     @objc dynamic var timestamp: Date = Date()
     @objc dynamic var strarray: [String] = []
     @objc dynamic var strdict: [String : String] = [:]
+    @objc dynamic var strset: Set<String> = []
 
     deinit {
         print("freeing ToDoItem")
@@ -24,6 +25,7 @@ enum PropertyType: String {
     case float = "f", double = "d", bool = "B"
     case string = "@\"NSString\"", date = "@\"NSDate\""
     case array = "@\"NSArray\"", dict = "@\"NSDictionary\""
+    case set = "@\"NSSet\""
 }
 
 struct ClassInfo {
@@ -39,15 +41,24 @@ struct ClassInfo {
 //https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/KeyValueCoding/Compliant.html#//apple_ref/doc/uid/20002172
 class MyObserver : NSObject {
     let classInfo: ClassInfo
-    let target: ToDoItem
+    let target: NSObject
     private var context = 0
 
-    init(classInfo: ClassInfo, observe target: ToDoItem) {
+    init(classInfo: ClassInfo, observe target: NSObject) {
         self.classInfo = classInfo
         self.target = target
         super.init()
+
+        // Swift also provides an NSObject.observe() API for registering observers:
+        // https://developer.apple.com/documentation/swift/cocoa_design_patterns/using_key-value_observing_in_swift
+        // This API has the advantage that it doesn't require explicitly removing observers.
+        // However, the argument identifying the key path in this method is of type KeyPath,
+        // which is statically type-checked by Swift. This is convenient when hard-coding
+        // a particular property to observe, but it gets in the way here, where we want to
+        // register observers given the key path as a string. Hence we use the Objective-C
+        // API for key-value observing here, and unregister observers in deinit {}.
         for property in classInfo.properties.keys {
-            target.addObserver(self, forKeyPath: property, options: [.old, .new], context: &context)
+            target.addObserver(self, forKeyPath: property, options: [.old, .new, .initial], context: &context)
         }
     }
 
@@ -60,6 +71,7 @@ class MyObserver : NSObject {
 
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         // This pattern is from https://stackoverflow.com/a/25219216
+        // https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/KeyValueObserving/Articles/KVOBasics.html
         guard context == &self.context else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
             return
@@ -67,7 +79,30 @@ class MyObserver : NSObject {
 
         guard let keyPath = keyPath else { return }
         guard let change = change else { return }
-        print("\(keyPath) changed from \(change[.oldKey]!) to \(change[.newKey]!)")
+        var description = "\(keyPath) changed"
+        if let oldValue = change[.oldKey] {
+            description += " from \(oldValue)"
+        }
+        if let newValue = change[.newKey] {
+            description += " to \(newValue)"
+        }
+        if let kind = change[.kindKey] as? UInt {
+            if let kindEnum = NSKeyValueChange(rawValue: kind) {
+                if kindEnum == .insertion {
+                    description += " kind: insertion"
+                } else if kindEnum == .removal {
+                    description += " kind: removal"
+                } else if kindEnum == .replacement {
+                    description += " kind: replacement"
+                } else if kindEnum == .setting {
+                    description += " kind: setting"
+                }
+            }
+        }
+        print(description)
+        if let indexes = change[.indexesKey] {
+            print("    indexes: \(indexes)")
+        }
     }
 }
 
@@ -124,5 +159,14 @@ struct Experiment {
         instance.isDone = true
         instance.body = "hello"
         instance.timestamp = Date()
+        instance.strarray.append("arrayItem")
+        instance.strarray[0] = "newItem"
+
+        // This triggers observations with kind == .insertion, kind == .removal
+        instance.mutableArrayValue(forKey: "strarray").add("secondItem")
+        instance.mutableArrayValue(forKey: "strarray").removeObject(at: 0)
+
+        instance.strdict["key"] = "value"
+        instance.strset.insert("setMember")
     }
 }
